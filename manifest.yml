@@ -10,4 +10,3 @@ applications:
     env:
       SPRING_PROFILES_ACTIVE: openai,postgres
       JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
-
