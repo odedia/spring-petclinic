@@ -14,7 +14,7 @@ services:
     profiles:
       - mysql
   postgres:
-    image: postgres:16.3
+    image: ankane/pgvector
     ports:
       - "5432:5432"
     environment:

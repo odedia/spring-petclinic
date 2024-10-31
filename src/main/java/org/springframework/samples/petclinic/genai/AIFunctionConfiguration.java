@@ -35,6 +35,15 @@ class AIFunctionConfiguration {
 	}
 
 	@Bean
+	@Description("Add a new pet owner to the pet clinic. " + "The Owner must include a first name and a last name "
+			+ "as two separate words, " + "plus an address and a 10-digit phone number")
+	public Function<OwnerRequest, OwnerResponse> addOwnerToPetclinic(AIDataProvider petclinicAiDataProvider) {
+		return request -> {
+			return petclinicAiDataProvider.addOwnerToPetclinic(request);
+		};
+	}
+
+	@Bean
 	@Description("List the veterinarians that the pet clinic has")
 	public Function<VetRequest, VetResponse> listVets(AIDataProvider petclinicAiProvider) {
 		return request -> {
@@ -55,16 +64,6 @@ class AIFunctionConfiguration {
 	public Function<AddPetRequest, AddedPetResponse> addPetToOwner(AIDataProvider petclinicAiProvider) {
 		return request -> {
 			return petclinicAiProvider.addPetToOwner(request);
-		};
-	}
-
-	@Bean
-	@Description("Add a new pet owner to the pet clinic. "
-			+ "The Owner must include a first name and a last name as two separate words, "
-			+ "plus an address and a 10-digit phone number")
-	public Function<OwnerRequest, OwnerResponse> addOwnerToPetclinic(AIDataProvider petclinicAiDataProvider) {
-		return request -> {
-			return petclinicAiDataProvider.addOwnerToPetclinic(request);
 		};
 	}
 

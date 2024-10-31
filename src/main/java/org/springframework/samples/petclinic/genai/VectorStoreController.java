@@ -52,7 +52,7 @@ public class VectorStoreController {
 		Resource resource = new ClassPathResource("vectorstore.json");
 
 		// Check if file exists
-		if (resource.exists()) {
+		if (resource.exists() && vectorStore instanceof SimpleVectorStore) {
 			// In order to save on AI credits, use a pre-embedded database that was saved
 			// to
 			// disk based on the current data in the h2 data.sql file
@@ -73,7 +73,7 @@ public class VectorStoreController {
 
 		List<Document> documents = reader.get();
 		// add the documents to the vector store
-		this.vectorStore.add(documents);
+		// this.vectorStore.add(documents);
 
 		if (vectorStore instanceof SimpleVectorStore) {
 			var file = File.createTempFile("vectorstore", ".json");
@@ -101,5 +101,4 @@ public class VectorStoreController {
 			return null;
 		}
 	}
-
 }

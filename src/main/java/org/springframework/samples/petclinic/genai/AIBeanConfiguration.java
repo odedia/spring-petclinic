@@ -23,9 +23,9 @@ public class AIBeanConfiguration {
 		return new InMemoryChatMemory();
 	}
 
-	@Bean
-	VectorStore vectorStore(EmbeddingModel embeddingModel) {
-		return new SimpleVectorStore(embeddingModel);
-	}
+	// @Bean
+	// VectorStore vectorStore(EmbeddingModel embeddingModel) {
+	// return new SimpleVectorStore(embeddingModel);
+	// }
 
 }

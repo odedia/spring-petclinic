@@ -52,7 +52,8 @@ public class PetclinicChatClient {
 
   @PostMapping("/chatclient")
   public String exchange(@RequestBody String query) {
-	  //All chatbot messages go through this endpoint and are passed to the LLM
+	  //All chatbot messages go through this endpoint 
+	  //and are passed to the LLM
 	  return
 	  this.chatClient
 	  .prompt()
