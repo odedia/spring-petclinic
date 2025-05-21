@@ -73,7 +73,7 @@ public class VectorStoreController {
 
 		List<Document> documents = reader.get();
 		// add the documents to the vector store
-		// this.vectorStore.add(documents);
+		this.vectorStore.add(documents);
 
 		if (vectorStore instanceof SimpleVectorStore) {
 			var file = File.createTempFile("vectorstore", ".json");
@@ -101,4 +101,5 @@ public class VectorStoreController {
 			return null;
 		}
 	}
+
 }

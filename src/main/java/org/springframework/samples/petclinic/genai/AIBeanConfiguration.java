@@ -1,10 +1,10 @@
 package org.springframework.samples.petclinic.genai;
 
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,12 +20,7 @@ public class AIBeanConfiguration {
 
 	@Bean
 	public ChatMemory chatMemory() {
-		return new InMemoryChatMemory();
+		return MessageWindowChatMemory.builder().maxMessages(10).build();
 	}
-
-	// @Bean
-	// VectorStore vectorStore(EmbeddingModel embeddingModel) {
-	// return new SimpleVectorStore(embeddingModel);
-	// }
 
 }
