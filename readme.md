@@ -89,15 +89,25 @@ Spring Petclinic integrates a Chatbot that allows you to interact with the appli
 
 By default, The Spring AI Chatbot is disabled and will return the message `Chat is currently unavailable. Please try again later.`.
 
-Spring Petclinic currently supports OpenAI or Azure's OpenAI as the LLM provider.
+Spring Petclinic currently supports OpenAI as the LLM provider.
 In order to enable Spring AI, perform the following steps:
 
-1. Decide which provider you want to use. By default, the `spring-ai-azure-openai-spring-boot-starter` dependency is enabled. You can change it to `spring-ai-openai-spring-boot-starter`in either`pom.xml` or in `build.gradle`, depending on your build tool of choice.
-2. Copy `src/main/resources/creds-template.yaml` into `src/main/resources/creds.yaml`, and edit its contents with your API key and API endpoint. Refer to OpenAI's or Azure's documentation for further information on how to obtain these. You only need to populate the provider you're using - either openai, or azure-openai.
-3. Boot your application with the `openai` profile. This profile will work for both LLM providers. You can boot the application with that profile using any of the following:
-- For maven: `mvn -Dspring-boot.run.profiles=openai spring-boot:run`
-- For Gradle: `./gradlew bootRun --args='--spring.profiles.active=openai'` 
-- For a standard jar file: `SPRING_PROFILES_ACTIVE=openai java -jar build/libs/spring-petclinic-3.3.0.jar` or `SPRING_PROFILES_ACTIVE=openai java -jar target/spring-petclinic-3.3.0-SNAPSHOT.jar`.
+1. Decide which provider you want to use. By default, the `spring-ai-starter-model-openai` dependency is enabled.
+2. Copy `src/main/resources/creds-template.yaml` into `src/main/resources/creds.yaml`, and edit its contents with your API key. Refer to OpenAI's documentation for further information on how to obtain these. 
+3. Run a local postgres that supports pgvector with Docker:
+
+```
+docker run --name pgvector \
+  -e POSTGRES_USER=myuser \
+  -e POSTGRES_PASSWORD=mypassword \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  -d ankane/pgvector:latest
+```
+
+3. Boot your application with the `openai,postgres` profile. You can boot the application with that profile using any of the following:
+- For maven: `mvn -Dspring-boot.run.profiles=openai,postgres spring-boot:run`
+- For a standard jar file: `SPRING_PROFILES_ACTIVE=openai java -jar target/spring-petclinic-3.4.0-SNAPSHOT.jar`.
 
 ## Test Applications
 
