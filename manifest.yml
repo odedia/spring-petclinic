@@ -6,10 +6,11 @@ applications:
     path: target/spring-petclinic-3.4.0-SNAPSHOT.jar
     buildpack: java_buildpack_offline
     services:
-      - genai-chat
-      - postgres
-      - embeddings
+      - chat
+      - my-db
+      - embed
     env:
       SPRING_PROFILES_ACTIVE: openai,postgres
       JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
       JAVA_OPTS: "-Dorg.apache.catalina.core.AprLifecycleListener.SSLEngine=off"
+      VECTOR_DIMENSIONS: 768

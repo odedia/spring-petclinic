@@ -110,20 +110,23 @@
 
     <!-- JavaScript for handling chatbox interaction -->
 <script>
-    function appendMessage(message, type) {
-        const chatMessages = document.getElementById('chatbox-messages');
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('chat-bubble', type);
-        
-        // Convert Markdown to HTML
-        const htmlContent = marked.parse(message); // Use marked.parse() for newer versions
-        messageElement.innerHTML = htmlContent;
-        
-        chatMessages.appendChild(messageElement);
+	function appendMessage(message, type) {
+	    const chatMessages = document.getElementById('chatbox-messages');
+	    const messageElement = document.createElement('div');
+	    messageElement.classList.add('chat-bubble', type);
 
-        // Scroll to the bottom of the chatbox to show the latest message
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+	    // Remove <think>...</think> blocks (non-greedy match)
+	    const cleanedMessage = message.replace(/<think>[\s\S]*?<\/think>/g, '');
+
+	    // Convert Markdown to HTML
+	    const htmlContent = marked.parse(cleanedMessage);
+	    messageElement.innerHTML = htmlContent;
+
+	    chatMessages.appendChild(messageElement);
+
+	    // Scroll to the bottom of the chatbox
+	    chatMessages.scrollTop = chatMessages.scrollHeight;
+	}
 
     function toggleChatbox() {
         const chatbox = document.getElementById('chatbox');

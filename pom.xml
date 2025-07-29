@@ -43,7 +43,7 @@
       <artifactId>java-cfenv-all</artifactId>
       <version>3.2.0</version>
   </dependency>
-      <dependency>
+  <dependency>
       <groupId>org.springframework.ai</groupId>
       <artifactId>spring-ai-starter-model-openai</artifactId>
   </dependency>
