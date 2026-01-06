@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Oded Shopen
  */
 @Component
-@Profile("openai")
+@Profile({ "openai" })
 public class VectorStoreController {
 
 	private final Logger logger = LoggerFactory.getLogger(VectorStoreController.class);

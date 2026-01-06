@@ -106,7 +106,7 @@ docker run --name pgvector \
 ```
 
 3. Boot your application with the `openai,postgres` profile. You can boot the application with that profile using any of the following:
-- For maven: `mvn -Dspring-boot.run.profiles=openai,postgres spring-boot:run`
+- For maven: `mvn spring-boot:run -Dspring-boot.run.profiles=openai,postgres -Dspring-boot.run.jvmArguments="-Dspring.ai.openai.api-key=$OPENAI_API_KEY"`
 - For a standard jar file: `SPRING_PROFILES_ACTIVE=openai java -jar target/spring-petclinic-3.4.0-SNAPSHOT.jar`.
 
 ## Test Applications

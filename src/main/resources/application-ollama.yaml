@@ -1,0 +1,23 @@
+spring:
+  chat:
+    client:
+      enabled: true
+  ai:
+    model:
+      embedding: ollama
+      chat: ollama
+    ollama:
+      init:
+        pull-model-strategy: always
+        embedding:
+          additional-models:
+            - nomic-embed-text:latest
+      chat:
+        additional-models:
+         - gpt-oss:20b
+        options:
+          model: gpt-oss:20b
+          num-ctx: 131027
+      embedding:
+        options:
+          model: nomic-embed-text:latest

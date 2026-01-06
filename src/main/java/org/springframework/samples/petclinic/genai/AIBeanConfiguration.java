@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
  * @author Oded Shopen
  */
 @Configuration
-@Profile("openai")
+@Profile({ "openai" })
 public class AIBeanConfiguration {
 
 	@Bean

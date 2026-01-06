@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.samples.petclinic.owner.Pet;
-import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author Oded Shopen
  */
 @Service
-@Profile("openai")
+@Profile({ "openai" })
 class PetclinicToolsService {
 
 	private final AIVectorDataProvider petclinicVectorProvider;
@@ -45,7 +44,7 @@ class PetclinicToolsService {
 		this.petclinicVectorProvider = petclinicAiProvider;
 	}
 
-	@Tool(name = "listOwners", description = "List all pet clinic owners, returning their basic information")
+	@Tool(name = "listOwners", description = "List all pet clinic owners, " + "returning their basic information")
 	public List<Owner> listOwners() {
 		Pageable pageable = PageRequest.of(0, 100);
 		Page<Owner> ownerPage = ownerRepository.findAll(pageable);
@@ -53,7 +52,7 @@ class PetclinicToolsService {
 	}
 
 	@Tool(name = "addOwnerToPetclinic",
-			description = "Add a new pet owner to the pet clinic. It's ok to have zero pets. The Owner must include first name and last name as two separate words, an address and a 10‑digit phone number")
+			description = "Add or update a pet owner in the pet clinic. It's ok to have zero pets. The Owner must include first name and last name as two separate words, an address and a 10‑digit phone number")
 	public Owner addOwnerToPetclinic(@ToolParam(description = "The owner details to add") Owner owner) {
 		logger.info("received owner \n\n{}\n\n", owner);
 		ownerRepository.save(owner);
@@ -66,12 +65,11 @@ class PetclinicToolsService {
 		return petclinicVectorProvider.getVets(vet);
 	}
 
-	@Tool(name = "addPetToOwner", description = 
-			   """
-	           Add a pet with the specified petTypeId to an owner identified by the ownerId  
-	           The allowed Pet types IDs are only:
-	           1 - cat, 2 - dog, 3 - lizard, 4 - snake, 5 - bird, 6 - hamster"
-			   """)
+	@Tool(name = "addPetToOwner", description = """
+			      Add a pet with the specified petTypeId to an owner identified by the ownerId
+			      The allowed Pet types IDs are only:
+			      1 - cat, 2 - dog, 3 - lizard, 4 - snake, 5 - bird, 6 - hamster"
+			""")
 	public Owner addPetToOwner(
 			@ToolParam(description = "The pet being added, including its name, type and birth date",
 					required = true) Pet pet,

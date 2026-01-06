@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Oded Shopen
  */
 @Service
-@Profile("openai")
+@Profile({ "openai" })
 public class AIVectorDataProvider {
 
 	private final VectorStore vectorStore;
