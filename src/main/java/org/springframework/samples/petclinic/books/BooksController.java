@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Profile({ "openai" })
 public class BooksController {
 
-	private static final String PDF_RESOURCE_PATH = "AH_vet_guide.cleaned.pdf";
+	private static final String PDF_RESOURCE_PATH = "The Spring Petclinic Veterinary Field Manual.pdf";
 
 	private static final String SOURCE_METADATA_KEY = "source";
 
