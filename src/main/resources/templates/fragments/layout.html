@@ -60,17 +60,29 @@
             <span>Veterinarians</span>
           </li>
 
+          <li th:replace="~{::menuItem ('/books','books','books','book','Books')}">
+            <span class="fa fa-book" aria-hidden="true"></span>
+            <span>Books</span>
+          </li>
+
           <li
             th:replace="~{::menuItem ('/oups','error','trigger a RuntimeException to see how it is handled','exclamation-triangle','Error')}">
             <span class="fa exclamation-triangle" aria-hidden="true"></span>
             <span>Error</span>
           </li>
 
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)" onclick="toggleChatSidebar()" title="Chat">
+              <span class="fa fa-comments" aria-hidden="true"></span>
+              <span>Chat</span>
+            </a>
+          </li>
+
         </ul>
       </div>
     </div>
   </nav>
-  
+
   <div class="container-fluid">
     <div class="container xd-container">
 
@@ -81,7 +93,8 @@
       <div class="container">
         <div class="row">
           <div class="col-12 text-center">
-            <img src="../static/images/spring-logo.svg" th:src="@{/resources/images/spring-logo.svg}" alt="VMware Tanzu Logo" class="logo">
+            <img src="../static/images/spring-logo.svg" th:src="@{/resources/images/spring-logo.svg}"
+              alt="VMware Tanzu Logo" class="logo">
           </div>
         </div>
       </div>
@@ -89,106 +102,122 @@
   </div>
 
 
-<div class="chatbox" id="chatbox">
-    <div class="chatbox-header" onclick="toggleChatbox()">
+  <!-- Chat Overlay (click to close) -->
+  <div class="chat-overlay" id="chat-overlay" onclick="closeChatSidebar()"></div>
+
+  <!-- Chat Sidebar -->
+  <div class="chat-sidebar" id="chat-sidebar">
+    <div class="chat-sidebar-header">
+      <div class="header-title">
+        <span class="fa fa-comments"></span>
         Chat with Us!
+      </div>
+      <button class="close-btn" onclick="closeChatSidebar()">
+        <span class="fa fa-times"></span>
+      </button>
     </div>
-    <div class="chatbox-content" id="chatbox-content">
-        <div class="chatbox-messages" id="chatbox-messages">
-            <!-- Chat messages will be dynamically inserted here -->
-        </div>
-        <div class="chatbox-footer">
-            <input type="text" id="chatbox-input" placeholder="Type a message..." onkeydown="handleKeyPress(event)" />
-            <button onclick="sendMessage()">Send</button>
-        </div>
+    <div class="chat-sidebar-messages" id="chatbox-messages">
+      <!-- Chat messages will be dynamically inserted here -->
     </div>
-</div>
+    <div class="chat-sidebar-footer">
+      <input type="text" id="chatbox-input" placeholder="Type a message..." onkeydown="handleKeyPress(event)" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
 
+  <!-- JavaScript for handling chat sidebar interaction -->
+  <script>
+    function appendMessage(message, type) {
+      const chatMessages = document.getElementById('chatbox-messages');
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('chat-bubble', type);
 
+      // Remove <think>...</think> blocks (non-greedy match)
+      const cleanedMessage = message.replace(/<think>[\s\S]*?<\/think>/g, '');
 
+      // Convert Markdown to HTML
+      const htmlContent = marked.parse(cleanedMessage);
+      messageElement.innerHTML = htmlContent;
 
+      chatMessages.appendChild(messageElement);
 
-    <!-- JavaScript for handling chatbox interaction -->
-<script>
-	function appendMessage(message, type) {
-	    const chatMessages = document.getElementById('chatbox-messages');
-	    const messageElement = document.createElement('div');
-	    messageElement.classList.add('chat-bubble', type);
+      // Scroll to the bottom of the chatbox
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-	    // Remove <think>...</think> blocks (non-greedy match)
-	    const cleanedMessage = message.replace(/<think>[\s\S]*?<\/think>/g, '');
+    function toggleChatSidebar() {
+      const sidebar = document.getElementById('chat-sidebar');
+      const overlay = document.getElementById('chat-overlay');
 
-	    // Convert Markdown to HTML
-	    const htmlContent = marked.parse(cleanedMessage);
-	    messageElement.innerHTML = htmlContent;
+      if (sidebar.classList.contains('open')) {
+        closeChatSidebar();
+      } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('visible');
+        // Save state
+        localStorage.setItem('chatSidebarOpen', 'true');
+        // Focus input
+        document.getElementById('chatbox-input').focus();
+      }
+    }
 
-	    chatMessages.appendChild(messageElement);
+    function closeChatSidebar() {
+      const sidebar = document.getElementById('chat-sidebar');
+      const overlay = document.getElementById('chat-overlay');
 
-	    // Scroll to the bottom of the chatbox
-	    chatMessages.scrollTop = chatMessages.scrollHeight;
-	}
-
-    function toggleChatbox() {
-        const chatbox = document.getElementById('chatbox');
-        const chatboxContent = document.getElementById('chatbox-content');
-        
-        if (chatbox.classList.contains('minimized')) {
-            chatbox.classList.remove('minimized');
-            chatboxContent.style.height = '400px'; // Set to initial height when expanded
-        } else {
-            chatbox.classList.add('minimized');
-            chatboxContent.style.height = '40px'; // Set to minimized height
-        }
+      sidebar.classList.remove('open');
+      overlay.classList.remove('visible');
+      localStorage.setItem('chatSidebarOpen', 'false');
     }
 
     function sendMessage() {
-        const query = document.getElementById('chatbox-input').value;
+      const query = document.getElementById('chatbox-input').value;
 
-        // Only send if there's a message
-        if (!query.trim()) return;
+      // Only send if there's a message
+      if (!query.trim()) return;
 
-        // Clear the input field after sending the message
-        document.getElementById('chatbox-input').value = '';
+      // Clear the input field after sending the message
+      document.getElementById('chatbox-input').value = '';
 
-        // Display user message in the chatbox
-        appendMessage(query, 'user');
+      // Display user message in the chatbox
+      appendMessage(query, 'user');
 
-        // Send the message to the backend
-        fetch('/chatclient', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(query),
-        })
+      // Send the message to the backend
+      fetch('/chatclient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+      })
         .then(response => response.text())
         .then(responseText => {
-            // Display the response from the server in the chatbox
-            appendMessage(responseText, 'bot');
+          // Display the response from the server in the chatbox
+          appendMessage(responseText, 'bot');
         })
         .catch(error => console.error('Error:', error));
     }
 
     function handleKeyPress(event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Prevents adding a newline
-            sendMessage(); // Send the message when Enter is pressed
-        }
+      if (event.key === "Enter") {
+        event.preventDefault(); // Prevents adding a newline
+        sendMessage(); // Send the message when Enter is pressed
+      }
     }
 
     // Save chat messages to localStorage
     function saveChatMessages() {
-        const messages = document.getElementById('chatbox-messages').innerHTML;
-        localStorage.setItem('chatMessages', messages);
+      const messages = document.getElementById('chatbox-messages').innerHTML;
+      localStorage.setItem('chatMessages', messages);
     }
 
     // Load chat messages from localStorage
     function loadChatMessages() {
-        const messages = localStorage.getItem('chatMessages');
-        if (messages) {
-            document.getElementById('chatbox-messages').innerHTML = messages;
-            document.getElementById('chatbox-messages').scrollTop = document.getElementById('chatbox-messages').scrollHeight;
-        }
+      const messages = localStorage.getItem('chatMessages');
+      if (messages) {
+        document.getElementById('chatbox-messages').innerHTML = messages;
+        document.getElementById('chatbox-messages').scrollTop = document.getElementById('chatbox-messages').scrollHeight;
+      }
     }
 
     // Call loadChatMessages when the page loads
@@ -196,12 +225,12 @@
 
     // Ensure messages are saved when navigating away
     window.onbeforeunload = saveChatMessages;
-</script>
+  </script>
 
 
 
-<script th:src="@{/webjars/bootstrap/5.3.3/dist/js/bootstrap.bundle.min.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.3/dist/js/bootstrap.bundle.min.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 
 </body>

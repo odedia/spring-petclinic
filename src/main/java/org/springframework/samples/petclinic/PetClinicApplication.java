@@ -16,9 +16,15 @@
 
 package org.springframework.samples.petclinic;
 
+import java.util.List;
+
+import org.springframework.ai.support.ToolCallbacks;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.samples.petclinic.genai.PetclinicToolsService;
 
 /**
  * PetClinic Spring Boot Application.
@@ -32,6 +38,11 @@ public class PetClinicApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PetClinicApplication.class, args);
+	}
+
+	@Bean
+	public List<ToolCallback> registerTools(PetclinicToolsService petsService) {
+		return List.of(ToolCallbacks.from(petsService));
 	}
 
 }

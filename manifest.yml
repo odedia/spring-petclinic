@@ -7,10 +7,10 @@ applications:
     buildpack: java_buildpack_offline
     services:
       - chat
-      - my-db
-      - embed
+      - petclinic-postgres
+      - embed-v2
     env:
       SPRING_PROFILES_ACTIVE: openai,postgres
-      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 25.+ } }'
       JAVA_OPTS: "-Dorg.apache.catalina.core.AprLifecycleListener.SSLEngine=off"
       VECTOR_DIMENSIONS: 768

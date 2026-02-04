@@ -30,7 +30,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 @Service
 @Profile({ "openai" })
-class PetclinicToolsService {
+public class PetclinicToolsService {
 
 	private final AIVectorDataProvider petclinicVectorProvider;
 
@@ -42,9 +42,10 @@ class PetclinicToolsService {
 			VetRepository vetRepository, VectorStore vectorStore) {
 		this.ownerRepository = ownerRepository;
 		this.petclinicVectorProvider = petclinicAiProvider;
+		logger.info("PetclinicToolsService initialized! Tools should be available.");
 	}
 
-	@Tool(name = "listOwners", description = "List all pet clinic owners, " + "returning their basic information")
+	@Tool(name = "listOwners", description = "List all pet clinic owners, returning their basic information")
 	public List<Owner> listOwners() {
 		Pageable pageable = PageRequest.of(0, 100);
 		Page<Owner> ownerPage = ownerRepository.findAll(pageable);
