@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +16,6 @@ import org.springframework.samples.petclinic.owner.Pet;
 import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetRepository;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * This class defines the @Bean functions that the LLM provider will invoke when it
@@ -32,16 +29,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @Profile({ "openai" })
 public class PetclinicToolsService {
 
-	private final AIVectorDataProvider petclinicVectorProvider;
-
 	private final Logger logger = LoggerFactory.getLogger(PetclinicToolsService.class);
 
-	private OwnerRepository ownerRepository;
+	private final OwnerRepository ownerRepository;
 
-	public PetclinicToolsService(AIVectorDataProvider petclinicAiProvider, OwnerRepository ownerRepository,
-			VetRepository vetRepository, VectorStore vectorStore) {
+	private final VetRepository vetRepository;
+
+	public PetclinicToolsService(OwnerRepository ownerRepository, VetRepository vetRepository) {
 		this.ownerRepository = ownerRepository;
-		this.petclinicVectorProvider = petclinicAiProvider;
+		this.vetRepository = vetRepository;
 		logger.info("PetclinicToolsService initialized! Tools should be available.");
 	}
 
@@ -61,9 +57,10 @@ public class PetclinicToolsService {
 	}
 
 	@Tool(name = "listVets", description = "List all veterinarians at the pet clinic")
-	public List<String> listVets(@ToolParam(description = "Optional filter criteria for veterinarians") Vet vet)
-			throws JsonProcessingException {
-		return petclinicVectorProvider.getVets(vet);
+	public List<Vet> listVets() {
+		Pageable pageable = PageRequest.of(0, 100);
+		Page<Vet> vetPage = vetRepository.findAll(pageable);
+		return vetPage.getContent();
 	}
 
 	@Tool(name = "addPetToOwner", description = """
