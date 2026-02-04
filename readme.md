@@ -77,7 +77,9 @@ docker-compose --profile postgres up
 ```
 ## Integrating the Spring AI Chatbot
 
-Spring Petclinic integrates a Chatbot that allows you to interact with the application in a natural language. Here are some examples of what you could ask:
+Spring Petclinic integrates a Chatbot that allows you to interact with the application in natural language. The chat is accessible via the **Chat** button in the navigation bar, which opens a sliding sidebar from the right side of the screen.
+
+Here are some examples of what you could ask:
 
 1. Please list the owners that come to the clinic.
 2. How many vets are there?
@@ -85,7 +87,19 @@ Spring Petclinic integrates a Chatbot that allows you to interact with the appli
 4. Which owners have dogs?
 5. Add a dog for Betty. Its name is Moopsie.
 
-![alt text](spring-ai.png)
+![Chat Sidebar](spring-ai-1.png)
+
+### Books Tab - RAG with PDF Embedding
+
+The **Books** tab allows you to view and embed veterinary guide PDFs into a vector store for AI-powered Q&A. This enables Retrieval-Augmented Generation (RAG) capabilities, allowing the chatbot to answer questions based on the content of embedded documents.
+
+- View the **Spring Petclinic Veterinary Field Manual** PDF directly in the browser
+- Click **Embed to Vector Store** to process and store the document for RAG queries
+- Once embedded, the chatbot can answer questions about veterinary care based on the manual
+
+![Books Tab with RAG](spring-ai-2.png)
+
+### Enabling Spring AI
 
 By default, The Spring AI Chatbot is disabled and will return the message `Chat is currently unavailable. Please try again later.`.
 
@@ -105,7 +119,7 @@ docker run --name pgvector \
   -d ankane/pgvector:latest
 ```
 
-3. Boot your application with the `openai,postgres` profile. You can boot the application with that profile using any of the following:
+4. Boot your application with the `openai,postgres` profile. You can boot the application with that profile using any of the following:
 - For maven: `mvn spring-boot:run -Dspring-boot.run.profiles=openai,postgres -Dspring-boot.run.jvmArguments="-Dspring.ai.openai.api-key=$OPENAI_API_KEY"`
 - For a standard jar file: `SPRING_PROFILES_ACTIVE=openai java -jar target/spring-petclinic-3.4.0-SNAPSHOT.jar`.
 
