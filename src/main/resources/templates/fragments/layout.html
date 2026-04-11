@@ -107,6 +107,7 @@
 
   <!-- Chat Sidebar -->
   <div class="chat-sidebar" id="chat-sidebar">
+    <div class="chat-sidebar-resize" id="chat-sidebar-resize"></div>
     <div class="chat-sidebar-header">
       <div class="header-title">
         <span class="fa fa-comments"></span>
@@ -138,6 +139,14 @@
       // Convert Markdown to HTML
       const htmlContent = marked.parse(cleanedMessage);
       messageElement.innerHTML = htmlContent;
+
+      // Wrap tables in a scrollable container
+      messageElement.querySelectorAll('table').forEach(table => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      });
 
       chatMessages.appendChild(messageElement);
 
@@ -221,10 +230,50 @@
     }
 
     // Call loadChatMessages when the page loads
-    window.onload = loadChatMessages;
+    window.onload = function() {
+      loadChatMessages();
+      // Restore saved sidebar width
+      const savedWidth = localStorage.getItem('chatSidebarWidth');
+      if (savedWidth) {
+        document.getElementById('chat-sidebar').style.width = savedWidth;
+      }
+    };
 
     // Ensure messages are saved when navigating away
     window.onbeforeunload = saveChatMessages;
+
+    // Sidebar resize handle
+    (function() {
+      const handle = document.getElementById('chat-sidebar-resize');
+      const sidebar = document.getElementById('chat-sidebar');
+      let isResizing = false;
+
+      handle.addEventListener('mousedown', function(e) {
+        isResizing = true;
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', function(e) {
+        if (!isResizing) return;
+        const newWidth = window.innerWidth - e.clientX;
+        if (newWidth >= 300 && newWidth <= window.innerWidth * 0.8) {
+          sidebar.style.width = newWidth + 'px';
+          sidebar.style.minWidth = 'unset';
+          sidebar.style.maxWidth = 'unset';
+        }
+      });
+
+      document.addEventListener('mouseup', function() {
+        if (isResizing) {
+          isResizing = false;
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          localStorage.setItem('chatSidebarWidth', sidebar.style.width);
+        }
+      });
+    })();
   </script>
 
 

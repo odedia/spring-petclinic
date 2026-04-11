@@ -14211,6 +14211,24 @@ strong {
   transform: translateX(0);
 }
 
+/* Resize handle on left edge */
+.chat-sidebar-resize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 10;
+  transition: background 0.2s ease;
+}
+
+.chat-sidebar-resize:hover,
+.chat-sidebar-resize:active {
+  background: rgba(109, 179, 63, 0.5);
+}
+
 /* Header */
 .chat-sidebar-header {
   background: linear-gradient(135deg, #6db33f 0%, #5fa134 100%);
@@ -14284,31 +14302,63 @@ strong {
   border-bottom-left-radius: 4px;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Heading styling within bot messages */
+.chat-bubble.bot h1,
+.chat-bubble.bot h2,
+.chat-bubble.bot h3,
+.chat-bubble.bot h4,
+.chat-bubble.bot h5,
+.chat-bubble.bot h6 {
+  margin: 12px 0 6px 0;
+  line-height: 1.3;
+  font-family: inherit;
+}
+
+.chat-bubble.bot h1 { font-size: 18px; }
+.chat-bubble.bot h2 { font-size: 16px; }
+.chat-bubble.bot h3 { font-size: 15px; }
+.chat-bubble.bot h4,
+.chat-bubble.bot h5,
+.chat-bubble.bot h6 { font-size: 14px; }
+
+/* Scrollable table wrapper */
+.chat-bubble.bot .table-wrapper {
+  overflow-x: auto;
+  margin: 10px 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Table styling within bot messages */
 .chat-bubble.bot table {
   border-collapse: collapse;
-  margin: 10px 0;
-  font-size: 13px;
-  min-width: 100%;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .chat-bubble.bot table th,
 .chat-bubble.bot table td {
-  border: 1px solid #ddd;
-  padding: 8px 12px;
+  border: 1px solid #ccc;
+  padding: 6px 8px;
   text-align: left;
-  white-space: nowrap;
+  color: #1a1a1a;
 }
 
 .chat-bubble.bot table th {
-  background-color: #6db33f;
+  background-color: #5fa134;
   color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chat-bubble.bot table tr {
+  background-color: #fff;
 }
 
 .chat-bubble.bot table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #e8e8e8;
 }
 
 /* Code block styling */
